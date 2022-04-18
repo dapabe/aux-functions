@@ -15,11 +15,8 @@ export default async function useFetch({ POST = false, url, postResponse }) {
     setInputData({ ...inputData, [name]: value });
   };
 
-  useEffect(() => {
-    setLoading(true);
-    setError(null);
-
-    //  fetchs defaults to GET, POST = false = GET
+  //  fetchs defaults to GET, POST = false = GET
+  const formSubmit = () => {
     if (!POST) {
       return await fetch(url)
         .then((res) => res.json())
@@ -52,10 +49,17 @@ export default async function useFetch({ POST = false, url, postResponse }) {
         setError(error);
       }
     }
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+
+    formSubmit();
 
     return () => setResponse(null), setError(null), setLoading(false);
   }, []);
 
-  //      GET                          POST       form.onChange
-  return { response, error, isLoading, inputData, handleChange };
+  //   GET/POST.response               POST       onChange      onSubmit
+  return { response, error, isLoading, inputData, handleChange, formSubmit };
 }
