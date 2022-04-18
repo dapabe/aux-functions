@@ -15,8 +15,33 @@ export default async function useFetch({ POST = false, url, postResponse }) {
     setInputData({ ...inputData, [name]: value });
   };
 
-  //  fetchs defaults to GET, POST = false = GET
-  const formSubmit = () => {
+  const formSubmit = (event) => {
+    event.preventDefault();
+
+    try {
+      await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(inputData),
+      });
+      setResponse(postResponse.ok); //  Needs testing
+      setLoading(false);
+      setError(null);
+    } catch (error) {
+      setResponse(postResponse.error);
+      setLoading(false);
+      setError(error);
+    }
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+
+    //  fetchs defaults to GET, POST = false = GET
     if (!POST) {
       return await fetch(url)
         .then((res) => res.json())
@@ -30,32 +55,7 @@ export default async function useFetch({ POST = false, url, postResponse }) {
           setLoading(false);
           setError(error);
         });
-    } else {
-      try {
-        await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(inputData),
-        });
-        setResponse(postResponse.ok); //  Needs testing
-        setLoading(false);
-        setError(null);
-      } catch (error) {
-        setResponse(postResponse.error);
-        setLoading(false);
-        setError(error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    setLoading(true);
-    setError(null);
-
-    formSubmit();
+    } else formSubmit();
 
     return () => setResponse(null), setError(null), setLoading(false);
   }, []);
