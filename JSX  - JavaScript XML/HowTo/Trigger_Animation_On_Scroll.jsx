@@ -7,7 +7,7 @@
 //              Block and StickySection have a "height:100vh"
 //              IMPORTANT: The variable inside the function checkScroll
 //                         has to be inside the function because of the
-//                         component life-cycle rules.  If it is outside
+//                         component life-cycle.  If it is outside
 //                         the variable it will be rendered as "undefined",
 //                         the variable is trying to access a refence on render,
 //                         so when is finally mounted the callback will take place
