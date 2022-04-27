@@ -2,14 +2,14 @@
 //                then return a boolean.
 
 function usePageOffset(pixels = globalThis.innerHeight) {
-  const [isOffset, setOffset] = useState(false);
-
-  const pageOffset = globalThis.scrollY ?? globalThis.pageYOffset;
-
+  const [isOffset, handleOffset] = useToggle(false);
+  
   const checkTopScroll = () => {
-    !isOffset && pageOffset >= pixels && setOffset(true);
-    isOffset && pageOffset <= pixels && setOffset(false);
+    const pageOffset = globalThis.scrollY ?? globalThis.pageYOffset;
+    !isOffset && pageOffset >= pixels && handleOffset();
+    isOffset && pageOffset <= pixels && handleOffset();
   };
+
   useEffect(() => {
     globalThis.addEventListener("scroll", checkTopScroll);
     return () => globalThis.removeEventListener("scroll", checkTopScroll);
